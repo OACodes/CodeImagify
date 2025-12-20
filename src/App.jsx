@@ -8,21 +8,27 @@ import Options from './components/Options'
 import Title from './components/Title'
 
 function App() {
-  // Shared state 
-  //  - Options: Sets background
-  //  - CodeDisplay
   const [background, setBackground] = useState('#1e1e1e');
+  const [language, setLanguage] = useState('JavaScript');
+
+  const updateBackground = (newBackground) => {
+    setBackground(newBackground);
+  }
+
+  const updateLanguage = (newLanguage) => {
+    setLanguage(newLanguage);
+  }
 
   return (
     <>
       <Navbar/>
-      <div className={'w-full h-10 self-center mt-15 text-base'}>
+      <div className={'w-full h-10 self-center mt-20 mb-10 text-base'}>
           <Title/>
       </div>
       <div className='flex'>
-        <Options bg={setBackground}/>
-        <CodeDisplay background={background}/>
-        {/* const [background, setBackground] = useState('#1e1e1e'); Include in bg options*/} 
+        <Options updateLanguage={ updateLanguage } updateBackground={updateBackground}/>
+        <CodeDisplay getBackground={background}/>
+        {/* const [background, setBackground] = useState('#1e1e1e'); Include in bg options*/}
       </div>
     </>
   )
