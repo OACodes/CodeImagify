@@ -1,22 +1,30 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useState, useEffect } from 'react'
 import './App.css'
 import Navbar from './components/Navbar'
 import CodeDisplay from './components/CodeDisplay'
 import Options from './components/Options'
 import Title from './components/Title'
 
+
 function App() {
-  const [background, setBackground] = useState('#1e1e1e');
-  const [language, setLanguage] = useState('JavaScript');
+  const [background, setBackground] = useState('#2196F3');
+  const [language, setLanguage] = useState('javascript');
+  const [theme, setTheme] = useState('hc-black');
+  // const [availableThemes, setAvailableThemes] = useState([]);
 
-  const updateBackground = (newBackground) => {
+
+  // useEffect(() => {
+  //     const themeNames = Object.keys(monacoThemes.default || monacoThemes);
+  //     setAvailableThemes(themeNames);
+  //     console.log(themeNames);
+  // }, []);
+
+
+
+  const update = (newBackground, newLanguage, newTheme) => {
     setBackground(newBackground);
-  }
-
-  const updateLanguage = (newLanguage) => {
     setLanguage(newLanguage);
+    setTheme(newTheme);
   }
 
   return (
@@ -26,9 +34,8 @@ function App() {
           <Title/>
       </div>
       <div className='flex'>
-        <Options updateLanguage={ updateLanguage } updateBackground={updateBackground}/>
-        <CodeDisplay getBackground={background}/>
-        {/* const [background, setBackground] = useState('#1e1e1e'); Include in bg options*/}
+        <Options updateLanguage={ update } updateBackground={ update } updateTheme={ update } />
+        <CodeDisplay getBackground={ background } getLanguage={ language } getTheme={ theme } />
       </div>
     </>
   )
