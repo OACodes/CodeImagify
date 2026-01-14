@@ -2,63 +2,59 @@ import { useState } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 
-const Background = ({ updateBackground }) => {
-    const [open, setOpen] = useState(false);
+const Background = ({ updateBackground, BackgroundType }) => {
+    //  ADD dropdown state here
+    const [selectedBackground, setSelectedBackground] = useState('');
+    const [isOpen, setIsOpen] = useState(false);
 
-    const toggle = () => {
-        setOpen(!open);
-    }
+    const backgrounds = {
+        '#2196F3': 'Blue',
+        '#FF0000': 'Red',
+        '#A855F7': 'Purple',
+        '#FFFFFF': 'White',
+        '#1e1e1e': 'Black'
+    };
 
+    const toggleDropdown = () => setIsOpen(!isOpen);
+
+    const handleOptionClick = (value) => {
+        setSelectedBackground(value);
+        updateBackground(value);
+        setIsOpen(false);
+    };
 
     return (
-        <div className={'flex flex-col w-fit'}>
-            <button type="button" onClick={toggle} className={"inline-flex items-center justify-center text-sm border border-[#e4e4e7] h-10 px-4 py-2 w-30 mrl-5 mb-0.5"}>
-                <span className='mr-2'>Background</span>
-                <FontAwesomeIcon className={''} icon={faChevronDown}/>
+        <div className={'relative flex flex-col w-55'}>
+            <button
+                type="button"
+                className={`inline-flex items-center justify-center rounded-md text-sm border ${selectedBackground ? 'border-[#2196F3]' : 'border-[#e4e4e7]'} h-10 px-4 py-2 w-30 mr-5 mb-1`}
+                onClick={toggleDropdown}
+                aria-haspopup="listbox"
+                aria-expanded={isOpen}
+            >
+                <p className='mr-2 font-semibold'>Background</p>
+                <FontAwesomeIcon className={''} icon={faChevronDown} />
             </button>
-            {
-                open && <>
-                    <button onClick={() => {updateBackground('#2196F3')}} className={"flex items-center justify-between flex-row rounded-t-md rounded-b-[0px] text-sm border border-[#e4e4e7] border-b-0 hover:border-[#2196F3] h-10 px-4 py-2 w-35 mt-0"}>
-                        <div className={'ml-2 text-[15px]'}>
-                            Blue
-                        </div>
-                        <div className={'self-end items-center justify-center rounded-sm text-sm w-5 h-5 bg-blue-500 ml-2'}>
-                        </div>
-                    </button>
-
-                    <button onClick={() => {updateBackground('#FF0000')}}  className={"flex items-center justify-between flex-row rounded-[0px] text-sm border border-[#e4e4e7] border-b-0 border-t-0 hover:border-[#FF0000] h-10 px-4 py-2 w-35 mt-0"}>
-                        <div className={'ml-2 text-[15px]'}>
-                            Red
-                        </div>
-                        <div className={'self-end items-center justify-center rounded-sm text-sm bg-red-500 w-5 h-5 ml-2'}>
-                        </div>
-                    </button>
-
-                    <button onClick={() => {updateBackground('#A855F7')}} className={"flex items-center justify-between flex-row rounded-[0px] text-sm border border-[#e4e4e7] border-b-0 border-t-0 h-10 px-4 py-2 w-35 mt-0"}>
-                        <div className={'ml-2 text-[15px]'}>
-                            Purple
-                        </div>
-                        <div className={'self-end items-center justify-center rounded-sm text-sm bg-purple-500 w-5 h-5 ml-2'}>
-                        </div>
-                    </button>
-
-                    <button onClick={() => {updateBackground('#FFFFFF')}} className={"flex items-center justify-between flex-row rounded-[0px] text-sm border border-[#e4e4e7] border-b-0 border-t-0 hover:border-[#808080] h-10 px-4 py-2 w-35 mt-0"}>
-                        <div className={'ml-2 text-[15px]'}>
-                            White
-                        </div>
-                        <div className={'self-end items-center justify-center rounded-sm text-sm bg-[#FFFFFF] border-[#e4e4e7] w-5 h-5 ml-2'}>
-                        </div>
-                    </button>
-
-                    <button onClick={() => {updateBackground('#1e1e1e')}} className={"flex items-center justify-between flex-row rounded-[0px] text-sm border border-[#e4e4e7] border-b-0 border-t-0 hover:border-[#1e1e1e] h-10 px-4 py-2 w-35 mt-0"}>
-                        <div className={'ml-2 text-[15px]'}>
-                            Black
-                        </div>
-                        <div className={'self-end items-center justify-center rounded-sm text-sm bg-[#1e1e1e] border-[#e4e4e7] w-5 h-5 ml-2'}>
-                        </div>
-                    </button>
-                </>
-            }
+            {isOpen && (
+                <div
+                    className="absolute mt-12 w-50 rounded-md bg-transparent shadow-lg focus:outline-none overflow-y-auto max-h-60"
+                    role="listbox"
+                >
+                    {Object.entries(backgrounds).map(([value, label]) => (
+                        <button
+                            key={value}
+                            type="button"
+                            className="flex items-center justify-between flex-row text-sm border-b border-[#e4e4e7] hover:bg-gray-100 h-10 px-4 py-2 w-full last:border-b-0" style={{ border: value }}
+                            onClick={() => handleOptionClick(value)}
+                            role="option"
+                            aria-selected={selectedBackground === value}
+                        >
+                            <span className="ml-2 text-[15px]">{label}</span>
+                            <div className={`self-end items-center justify-center rounded-sm text-sm w-5 h-5 ml-2`} style={{ backgroundColor: value, border: value === '#FFFFFF' ? '1px solid #e4e4e7' : 'none' }}></div>
+                        </button>
+                    ))}
+                </div>
+            )}
         </div>
     );
 }

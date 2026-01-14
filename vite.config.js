@@ -6,4 +6,8 @@ export default defineConfig({
   plugins: [
     react(),
   ],
-})
+  assetsInclude: ['**/*.json'],
+  optimizeDeps: {
+    include: ['monaco-themes']
+  }
+});

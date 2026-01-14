@@ -37,7 +37,7 @@ const Navbar = () => {
                                 alt="CodeImagify logo"
                                 className="h-10 w-10 rounded-lg shadow-sm"
                             />
-                            <span className="text-xl font-bold text-gray-900 dark:text-white">CodeImagify</span>
+                            <span className="text-xl font-bold text-gray-900 dark:text-white">CODEIMAGIFY</span>
                         </a>
                     </div>
 
