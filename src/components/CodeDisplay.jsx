@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import Editor from '@monaco-editor/react';
 
-const CodeDisplay = ({ getBackground, getLanguage, getTheme, headerBackground, fileType }) => {
+const CodeDisplay = ({ getBackground, getLanguage, getTheme, headerBackground, fileType, fileName }) => {
 
     console.log({ getBackground, getLanguage, getTheme, headerBackground, fileType })
 
@@ -41,7 +41,7 @@ const CodeDisplay = ({ getBackground, getLanguage, getTheme, headerBackground, f
         // Listen for content size changes and update height
         updateEditorHeight()
         editor.onDidContentSizeChange(updateEditorHeight);
-        
+
         const updateEditorWidth = () => {
             // Get the scroll width of the editor's content
             // This is the width needed to display all content without horizontal scroll
@@ -61,7 +61,7 @@ const CodeDisplay = ({ getBackground, getLanguage, getTheme, headerBackground, f
 
             // Update the state
             const newEditorWidth = setEditorWidth(`${Math.max(newWidth, minWidth)}px`);
-            if (newEditorWidth >= MAX_EDITOR_WEIGHT){
+            if (newEditorWidth >= MAX_EDITOR_WEIGHT) {
                 setEditorHeight(`${MAX_EDITOR_WEIGHT}px`);
                 setShowHorizontalScrollbar('visible');
             }
@@ -74,8 +74,11 @@ const CodeDisplay = ({ getBackground, getLanguage, getTheme, headerBackground, f
     }
 
     useEffect(() => {
-        if (getLanguage === 'javascript'){
+        if (getLanguage === 'javascript') {
             setCode(JavaScriptDefault);
+        }
+        else if (getLanguage === 'css') {
+            setCode(CSSDefault);
         }
         else {
             setCode('');
@@ -83,7 +86,7 @@ const CodeDisplay = ({ getBackground, getLanguage, getTheme, headerBackground, f
     }, [getLanguage]);
 
     return (
-        <div className={`flex items-center justify-center w-[737.99px] h-[450px] m-10 mx-10 mt-20 mb-5`} style={{ backgroundColor: getBackground }}>
+        <div className={`flex items-center justify-center w-[737.99px] h-[450px] m-10 mx-10 mt-20 mb-5`} style={{ background: getBackground }}>
             <div style={{ width: editorWidth, background: '#1e1e1e', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 4px 12px rgba(0,0,0,0.3)' }}>
                 {/* macOS Window Header */}
                 <div style={{
@@ -115,7 +118,7 @@ const CodeDisplay = ({ getBackground, getLanguage, getTheme, headerBackground, f
 
                     {/* Filename in center */}
                     <div style={{ flex: 1, textAlign: 'center', color: '#888', fontSize: '14px', fontFamily: 'monospace' }}>
-                        hello-world{fileType}
+                        {fileName}{fileType}
                     </div>
                 </div>
                 <Editor className={'hover:border-dotted hover:border-gray-500 rounded-xl'} height={editorHeight}
@@ -150,10 +153,19 @@ const CodeDisplay = ({ getBackground, getLanguage, getTheme, headerBackground, f
                             horizontal: showHorizontalScrollbar,                // Hide horizontal scrollbar
                             alwaysConsumeMouseWheel: false
                         },
-
                         fontFamily: 'jetbrains mono',
-
-                        fontSize: 13
+                        fontSize: 13,
+                        wordBasedSuggestions: 'off', // Or false
+                        quickSuggestions: {
+                            other: false,
+                            comments: false,
+                            strings: false,
+                        },
+                        suggestOnTriggerCharacters: false,
+                        acceptSuggestionOnEnter: 'off',
+                        parameterHints: {
+                            enabled: false
+                        }
                     }}
                 />
             </div>

@@ -11,6 +11,7 @@ function App() {
   const [language, setLanguage] = useState('javascript');
   const [theme, setTheme] = useState('vs-dark');
   const [fileType, setFileType] = useState('.js');
+  const [fileName, setFileName] = useState('hello_world');
   const [headerBackground, setHeaderBackground] = useState('#1e1e1e');
   const [fileExtensionsDetailed] = useState({
     javascript: ['.js', '.jsx', '.mjs', '.cjs'],
@@ -32,6 +33,10 @@ function App() {
     yaml: ['.yaml', '.yml'],
   });
 
+  const updateFileName = (currentFileName) => {
+    setFileName(prev => currentFileName ?? prev);
+  }
+
   const updateBackground = (newBackground) => {
     setBackground(prev => newBackground ?? prev);
   }
@@ -43,30 +48,30 @@ function App() {
 
   const updateTheme = (newTheme) => {
     setTheme(prev => newTheme ?? prev);
-    if (newTheme === 'vs-dark'){
+    if (newTheme === 'vs-dark') {
       setHeaderBackground('#1e1e1e');
     }
-    else if (newTheme === 'vs'){
+    else if (newTheme === 'vs') {
       setHeaderBackground('#FFFFFF');
     }
     else {
       setHeaderBackground(prev);
     }
   }
-  
+
   // Todo Jan 10: Refer to Claude and write out all the constants for the default code to their respective languages
 
   return (
     <>
-      <Navbar/>
+      <Navbar />
       <div className={'w-full h-10 self-center mt-20 mb-10 text-base'}>
-          <Title/>
+        <Title />
       </div>
       <div className='flex flex-col'>
-        <CodeDisplay getBackground={ background } getLanguage={ language } getTheme={ theme } headerBackground={ headerBackground } fileType={ fileType } />
+        <CodeDisplay getBackground={background} getLanguage={language} getTheme={theme} headerBackground={headerBackground} fileType={fileType} fileName={fileName} />
       </div>
       <div className='flex flex-col'>
-        <Options updateBackground={ updateBackground } updateLanguage={ updateLanguage } updateTheme={ updateTheme } />
+        <Options updateBackground={updateBackground} updateLanguage={updateLanguage} updateTheme={updateTheme} updateFileName={updateFileName} />
       </div>
     </>
   )

@@ -32,11 +32,12 @@ const Navbar = () => {
                                 Logo: place a file named `codeimagify-logo.png` (no spaces, lowercase) into your project's `public/` folder.
                                 Vite serves files from `public/` at the root, so `/codeimagify-logo.png` will resolve correctly.
                             */}
-                            <img
+                            {/* LOGO HERE */}
+                            {/* <img
                                 src={codeimagifyLogo}
                                 alt="CodeImagify logo"
                                 className="h-10 w-10 rounded-lg shadow-sm"
-                            />
+                            /> */}
                             <span className="text-xl font-bold text-gray-900 dark:text-white">CODEIMAGIFY</span>
                         </a>
                     </div>
