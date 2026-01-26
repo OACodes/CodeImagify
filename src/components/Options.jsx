@@ -5,6 +5,7 @@ import BackgroundType from "./BackgroundType";
 import { useState } from "react";
 import FileName from "./FileName";
 import ExportImage from "./ExportImage";
+import Save from "./Save";
 
 const Options = ({ updateBackground, updateLanguage, updateTheme, updateFileName }) => {
     // Jan 10 Todo:
@@ -34,7 +35,7 @@ const Options = ({ updateBackground, updateLanguage, updateTheme, updateFileName
                     {/* Export Image button */}
                     <ExportImage />
                     {/* Save Button (only works when logged in ) */}
-
+                    <Save />
                 </div>
             </div>
         </>

@@ -55,6 +55,9 @@ const Background = ({ updateBackground, BackgroundType }) => {
     };
 
 
+    const entries = BackgroundType === 'Solid' ? Object.entries(backgrounds) : Object.entries(gradients);
+    const isGradient = BackgroundType === 'Gradient';
+
     return (
         <div className={'relative flex flex-col w-55'}>
             <button
@@ -67,41 +70,32 @@ const Background = ({ updateBackground, BackgroundType }) => {
                 <p className='mr-2 font-semibold'>Background</p>
                 <FontAwesomeIcon className={''} icon={faChevronDown} />
             </button>
-            {isOpen && (BackgroundType === 'Solid' ? (
-                <div className="absolute mt-12 w-50 rounded-md bg-transparent shadow-lg focus:outline-none overflow-y-auto max-h-60"
-                    role="listbox">
-                    {Object.entries(backgrounds).map(([value, label]) => (
-                        <button
-                            key={value}
-                            type="button"
-                            className="flex items-center justify-between flex-row text-sm border-b border-[#e4e4e7] hover:bg-gray-100 h-10 px-4 py-2 w-full last:border-b-0" style={{ border: value }}
-                            onClick={() => handleOptionClick(value)}
-                            role="option"
-                            aria-selected={selectedBackground === value}
-                        >
-                            <span className="ml-2 text-[15px]">{label}</span>
-                            <div className={`self-end items-center justify-center rounded-sm text-sm w-5 h-5 ml-2`} style={{ backgroundColor: value, border: value === '#FFFFFF' ? '1px solid #e4e4e7' : 'none' }}></div>
-                        </button>
-                    ))}
-                </div>
-            ) : (
-                <div className="absolute mt-12 w-50 rounded-md bg-transparent shadow-lg focus:outline-none overflow-y-auto max-h-60"
-                    role="listbox">
-                    {Object.entries(gradients).map(([value, label]) => (
-                        <button
-                            key={value}
-                            type="button"
-                            className="flex items-center justify-between flex-row text-xs border-b border-none hover:bg-gray-100 h-10 px-4 py-2 w-full last:border-b-0" style={{ border: value }}
-                            onClick={() => handleOptionClick(value)}
-                            role="option"
-                            aria-selected={selectedBackground === value}
-                        >
-                            <span className="ml-2 text-[15px]">{label}</span>
-                            <div className={`self-end items-center justify-center rounded-sm text-sm w-5 h-4 ml-2`} style={{ background: value, border: value === '#FFFFFF' ? '1px solid #e4e4e7' : 'none' }}></div>
-                        </button>
-                    ))}
-                </div>
-            )
+            {isOpen && (
+                <>
+                    <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)} />
+                    <div className="absolute mt-12 w-50 rounded-md bg-white shadow-lg focus:outline-none overflow-y-auto max-h-60 z-50"
+                        role="listbox">
+                        {entries.map(([value, label], index) => {
+                            const isFirst = index === 0;
+                            const isLast = index === entries.length - 1;
+                            const roundedClass = isFirst ? 'rounded-t-md' : isLast ? 'rounded-b-md' : '';
+                            return (
+                                <button
+                                    key={value}
+                                    type="button"
+                                    className={`flex items-center justify-between flex-row text-sm hover:bg-gray-100 h-10 px-4 py-2 w-full ${isFirst ? 'border-b border-[#e4e4e7]' : isLast ? '' : 'border-b border-[#e4e4e7]'} ${roundedClass}`}
+                                    style={isGradient ? { border: value } : { border: value }}
+                                    onClick={() => handleOptionClick(value)}
+                                    role="option"
+                                    aria-selected={selectedBackground === value}
+                                >
+                                    <span className="ml-2 text-[15px]">{label}</span>
+                                    <div className={`self-end items-center justify-center rounded-sm text-sm ${isGradient ? 'w-5 h-4' : 'w-5 h-5'} ml-2`} style={isGradient ? { background: value } : { backgroundColor: value, border: value === '#FFFFFF' ? '1px solid #e4e4e7' : 'none' }}></div>
+                                </button>
+                            );
+                        })}
+                    </div>
+                </>
             )}
         </div>
     );

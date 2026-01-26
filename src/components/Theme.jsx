@@ -7,17 +7,19 @@ const Theme = ({ updateTheme }) => {
     const [selectedTheme, setSelectedTheme] = useState('');
     const [isOpen, setIsOpen] = useState(false);
 
-    const themes = {'vs': 'Light', 'vs-dark':'Dark'};
+    const themes = { 'vs': 'Light', 'vs-dark': 'Dark' };
 
     const toggleDropdown = () => setIsOpen(!isOpen);
 
     const handleOptionClick = (value) => {
         setSelectedTheme(value);
-        updateTheme(selectedTheme);
+        updateTheme(value);
         setIsOpen(false);
     };
 
-    return(
+    const entries = Object.entries(themes);
+
+    return (
         <div className={'relative flex flex-col w-55'}>
             <button
                 type="button"
@@ -30,23 +32,31 @@ const Theme = ({ updateTheme }) => {
                 <FontAwesomeIcon className={''} icon={faChevronDown} />
             </button>
             {isOpen && (
-                <div
-                    className="absolute mt-12 w-fit rounded-md bg-transparent shadow-lg focus:outline-none"
-                    role="listbox"
-                >
-                    {Object.entries(themes).map(([value, label]) => (
-                        <button
-                            key={value}
-                            type="button"
-                            className="flex items-center justify-between flex-row text-sm border-b border-[#e4e4e7] hover:bg-gray-100 h-10 px-4 py-2 w-full last:border-b-0 border-none"
-                            onClick={() => handleOptionClick(value)}
-                            role="option"
-                            aria-selected={selectedTheme === value}
-                        >
-                            <span className="ml-2 text-[15px]">{label}</span>
-                        </button>
-                    ))}
-                </div>
+                <>
+                    <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)} />
+                    <div
+                        className="absolute mt-12 w-fit rounded-md bg-white shadow-lg focus:outline-none z-50"
+                        role="listbox"
+                    >
+                        {entries.map(([value, label], index) => {
+                            const isFirst = index === 0;
+                            const isLast = index === entries.length - 1;
+                            const roundedClass = isFirst ? 'rounded-t-md' : isLast ? 'rounded-b-md' : '';
+                            return (
+                                <button
+                                    key={value}
+                                    type="button"
+                                    className={`flex items-center justify-between flex-row text-sm hover:bg-gray-100 h-10 px-4 py-2 w-full ${isFirst ? 'border-b border-[#e4e4e7]' : isLast ? '' : 'border-b border-[#e4e4e7]'} ${roundedClass}`}
+                                    onClick={() => handleOptionClick(value)}
+                                    role="option"
+                                    aria-selected={selectedTheme === value}
+                                >
+                                    <span className="ml-2 text-[15px]">{label}</span>
+                                </button>
+                            );
+                        })}
+                    </div>
+                </>
             )}
         </div>
     );
