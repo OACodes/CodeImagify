@@ -27,8 +27,8 @@ const Options = ({ updateBackground, updateLanguage, updateTheme, updateFileName
                     <Theme updateTheme={updateTheme} />
                 </div>
             </div>
-            <div className={'flex flex-row w-[97%] items-center h-[100px] bg-[#fcfcfd] mt-4 border border-[e3e3e3] rounded-sm'}>
-                <div className={'flex flex-row items-center w-[90%] h-[10%] mr-14 ml-10'}>
+            <div className={'flex flex-row w-[97%] items-center h-[100px] bg-[#fcfcfd] border border-[e3e3e3] rounded-sm mt-0 bg-transparent border-none'}>
+                <div className={'flex flex-row justify-evenly items-center w-[90%] h-[10%] mr-0 ml-0'}>
 
                     {/* Filename Input component */}
                     <FileName updateFileName={updateFileName} />

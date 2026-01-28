@@ -1,11 +1,9 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import Editor from '@monaco-editor/react';
 
-const CodeDisplay = ({ getBackground, getLanguage, getTheme, headerBackground, fileType, fileName }) => {
+const CodeDisplay = ({ getBackground, getLanguage, getTheme, headerBackground, fileType, fileName, code, updateCode }) => {
 
     console.log({ getBackground, getLanguage, getTheme, headerBackground, fileType })
-
-    const [code, setCode] = useState('');
     const editorRef = useRef(null);
     const [editorHeight, setEditorHeight] = useState('300px');
     const [showVerticalScrollbar, setShowVerticalScrollbar] = useState('hidden');
@@ -14,16 +12,7 @@ const CodeDisplay = ({ getBackground, getLanguage, getTheme, headerBackground, f
     const MAX_EDITOR_HEIGHT = 320; // Define max height in pixels
     const MAX_EDITOR_WEIGHT = 635;
 
-    const JavaScriptDefault = `function myFunction() {
-    // This is a comment
-    console.log("Hello World");\n}`;
-
-    const CSSDefault = `body {
-        margin: 0;
-        padding: 0;\n}
-    `;
-    console.log(editorHeight);
-    console.log(editorWidth);
+    // Removed hardcoded snippets - now using code prop from App.jsx
     function handleEditorDidMount(editor, monaco) {
         editorRef.current = editor;
 
@@ -73,17 +62,7 @@ const CodeDisplay = ({ getBackground, getLanguage, getTheme, headerBackground, f
         editor.onDidContentSizeChange(updateEditorWidth);
     }
 
-    useEffect(() => {
-        if (getLanguage === 'javascript') {
-            setCode(JavaScriptDefault);
-        }
-        else if (getLanguage === 'css') {
-            setCode(CSSDefault);
-        }
-        else {
-            setCode('');
-        }
-    }, [getLanguage]);
+    // Removed useEffect that set code based on language - now handled by App.jsx
 
     return (
         <div className={`flex items-center justify-center w-[737.99px] h-[450px] m-10 mx-10 mt-20 mb-5`} style={{ background: getBackground }}>
@@ -126,7 +105,7 @@ const CodeDisplay = ({ getBackground, getLanguage, getTheme, headerBackground, f
                     language={getLanguage}
                     theme={getTheme}
                     value={code}
-                    onChange={(value) => setCode(value)}
+                    onChange={(value) => updateCode(value)}
                     onMount={handleEditorDidMount}
                     options={{
                         // Remove IDE features

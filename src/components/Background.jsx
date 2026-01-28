@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
+import { motion } from 'framer-motion'
 const Background = ({ updateBackground, BackgroundType }) => {
     //  ADD dropdown state here
     const [selectedBackground, setSelectedBackground] = useState('');
@@ -73,8 +74,14 @@ const Background = ({ updateBackground, BackgroundType }) => {
             {isOpen && (
                 <>
                     <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)} />
-                    <div className="absolute mt-12 w-50 rounded-md bg-white shadow-lg focus:outline-none overflow-y-auto max-h-60 z-50"
-                        role="listbox">
+                    <motion.div 
+                        className="absolute mt-12 w-50 rounded-md bg-white shadow-lg focus:outline-none overflow-y-auto max-h-60 z-50"
+                        role="listbox"
+                        initial={{ opacity: 0, translateY: -10 }}
+                        animate={{ opacity: 1, translateY: 0 }}
+                        exit={{ opacity: 0, translateY: -10 }}
+                        transition={{ duration: 0.3, ease: 'easeInOut' }}
+                    >
                         {entries.map(([value, label], index) => {
                             const isFirst = index === 0;
                             const isLast = index === entries.length - 1;
@@ -94,7 +101,7 @@ const Background = ({ updateBackground, BackgroundType }) => {
                                 </button>
                             );
                         })}
-                    </div>
+                    </motion.div>
                 </>
             )}
         </div>

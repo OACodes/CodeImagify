@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
+import { motion } from 'framer-motion'
 
 const Language = ({ updateLanguage }) => {
     const [selectedLanguage, setSelectedLanguage] = useState('');
@@ -12,6 +13,7 @@ const Language = ({ updateLanguage }) => {
 
     const handleOptionClick = (value) => {
         setSelectedLanguage(value);
+
         updateLanguage(value);
         setIsOpen(false);
     };
@@ -33,9 +35,13 @@ const Language = ({ updateLanguage }) => {
             {isOpen && (
                 <>
                     <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)} />
-                    <div
-                        className="absolute mt-12 w-50 rounded-md bg-white shadow-lg focus:outline-none overflow-y-auto max-h-48 transition-all duration-200 ease-in-out z-50"
+                    <motion.div
+                        className="absolute mt-12 w-50 rounded-md bg-white shadow-lg focus:outline-none overflow-y-auto max-h-48 z-50"
                         role="listbox"
+                        initial={{ opacity: 0, translateY: -10 }}
+                        animate={{ opacity: 1, translateY: 0 }}
+                        exit={{ opacity: 0, translateY: -10 }}
+                        transition={{ duration: 0.3, ease: 'easeInOut' }}
                     >
                         {entries.map(([value, label], index) => {
                             const isFirst = index === 0;
@@ -54,7 +60,7 @@ const Language = ({ updateLanguage }) => {
                                 </button>
                             );
                         })}
-                    </div>
+                    </motion.div>
                 </>
             )}
         </div>

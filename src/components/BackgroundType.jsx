@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
+import { motion } from 'framer-motion'
 
 const BackgroundType = ({ updateBackgroundType }) => {
     const [selectedType, setSelectedType] = useState('Solid');
@@ -29,7 +30,13 @@ const BackgroundType = ({ updateBackgroundType }) => {
             {isOpen && (
                 <>
                     <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)} />
-                    <div className="absolute mt-12 bg-white rounded-md shadow-lg z-50">
+                    <motion.div 
+                        className="absolute mt-12 bg-white rounded-md shadow-lg z-50"
+                        initial={{ opacity: 0, translateY: -10 }}
+                        animate={{ opacity: 1, translateY: 0 }}
+                        exit={{ opacity: 0, translateY: -10 }}
+                        transition={{ duration: 0.3, ease: 'easeInOut' }}
+                    >
                         <button
                             key="solid"
                             type="button"
@@ -50,7 +57,7 @@ const BackgroundType = ({ updateBackgroundType }) => {
                         >
                             <span className="ml-2 text-[15px]">Gradient</span>
                         </button>
-                    </div>
+                    </motion.div>
                 </>
             )}
         </div>

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
+import { motion } from 'framer-motion'
 const Theme = ({ updateTheme }) => {
     // const monacoThemes = ['vs', 'vs-dark', 'hc-black', 'hc-light'];
     const [selectedTheme, setSelectedTheme] = useState('');
@@ -34,9 +35,13 @@ const Theme = ({ updateTheme }) => {
             {isOpen && (
                 <>
                     <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)} />
-                    <div
+                    <motion.div
                         className="absolute mt-12 w-fit rounded-md bg-white shadow-lg focus:outline-none z-50"
                         role="listbox"
+                        initial={{ opacity: 0, translateY: -10 }}
+                        animate={{ opacity: 1, translateY: 0 }}
+                        exit={{ opacity: 0, translateY: -10 }}
+                        transition={{ duration: 0.3, ease: 'easeInOut' }}
                     >
                         {entries.map(([value, label], index) => {
                             const isFirst = index === 0;
@@ -55,7 +60,7 @@ const Theme = ({ updateTheme }) => {
                                 </button>
                             );
                         })}
-                    </div>
+                    </motion.div>
                 </>
             )}
         </div>

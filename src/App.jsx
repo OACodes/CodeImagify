@@ -9,10 +9,13 @@ import Title from './components/Title'
 function App() {
   const [background, setBackground] = useState('#2196F3');
   const [language, setLanguage] = useState('javascript');
+  const [code, setCode] = useState('');
   const [theme, setTheme] = useState('vs-dark');
   const [fileType, setFileType] = useState('.js');
   const [fileName, setFileName] = useState('hello_world');
   const [headerBackground, setHeaderBackground] = useState('#1e1e1e');
+  const [snippets, setSnippets] = useState({});
+  const [loading, setLoading] = useState(true);
   const [fileExtensionsDetailed] = useState({
     javascript: ['.js', '.jsx', '.mjs', '.cjs'],
     typescript: ['.ts', '.tsx'],
@@ -33,6 +36,27 @@ function App() {
     yaml: ['.yaml', '.yml'],
   });
 
+  // Fetch snippets from JSON on component mount
+  useEffect(() => {
+    const fetchSnippets = async () => {
+      try {
+        const response = await fetch('/src/data/languageSnippets.json');
+        const data = await response.json();
+        setSnippets(data);
+        // Set initial code to JavaScript snippet
+        if (data.javascript) {
+          setCode(data.javascript.snippet);
+        }
+        setLoading(false);
+      } catch (error) {
+        console.error('Error loading snippets:', error);
+        setLoading(false);
+      }
+    };
+
+    fetchSnippets();
+  }, []);
+
   const updateFileName = (currentFileName) => {
     setFileName(prev => currentFileName ?? prev);
   }
@@ -42,8 +66,12 @@ function App() {
   }
 
   const updateLanguage = (newLanguage) => {
-    setLanguage(prev => newLanguage ?? prev);
+    setLanguage(newLanguage);
     setFileType(fileExtensionsDetailed[newLanguage][0]);
+    // Update code with the snippet for the selected language
+    if (snippets[newLanguage]) {
+      setCode(snippets[newLanguage].snippet);
+    }
   }
 
   const updateTheme = (newTheme) => {
@@ -59,7 +87,9 @@ function App() {
     }
   }
 
-  // Todo Jan 10: Refer to Claude and write out all the constants for the default code to their respective languages
+  if (loading) {
+    return <div className="flex items-center justify-center h-screen text-lg">Loading snippets...</div>;
+  }
 
   return (
     <>
@@ -68,7 +98,7 @@ function App() {
         <Title />
       </div>
       <div className='flex flex-col'>
-        <CodeDisplay getBackground={background} getLanguage={language} getTheme={theme} headerBackground={headerBackground} fileType={fileType} fileName={fileName} />
+        <CodeDisplay getBackground={background} getLanguage={language} getTheme={theme} headerBackground={headerBackground} fileType={fileType} fileName={fileName} code={code} updateCode={setCode} />
       </div>
       <div className='flex flex-col'>
         <Options updateBackground={updateBackground} updateLanguage={updateLanguage} updateTheme={updateTheme} updateFileName={updateFileName} />
