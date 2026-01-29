@@ -4,7 +4,7 @@ import Navbar from './components/Navbar'
 import CodeDisplay from './components/CodeDisplay'
 import Options from './components/Options'
 import Title from './components/Title'
-
+import Loader from './components/Loader'
 
 function App() {
   const [background, setBackground] = useState('#2196F3');
@@ -16,6 +16,7 @@ function App() {
   const [headerBackground, setHeaderBackground] = useState('#1e1e1e');
   const [snippets, setSnippets] = useState({});
   const [loading, setLoading] = useState(true);
+  const [ExportImg, setExportImg] = useState(false);
   const [fileExtensionsDetailed] = useState({
     javascript: ['.js', '.jsx', '.mjs', '.cjs'],
     typescript: ['.ts', '.tsx'],
@@ -87,8 +88,14 @@ function App() {
     }
   }
 
+  const updateExportImg = (newExportImg) => {
+    setExportImg(prev => newExportImg ?? prev);
+  }
+
+  const resetExportImage = () => {setExportImg(false)};
+
   if (loading) {
-    return <div className="flex items-center justify-center h-screen text-lg">Loading snippets...</div>;
+    return <Loader/>;
   }
 
   return (
@@ -98,10 +105,10 @@ function App() {
         <Title />
       </div>
       <div className='flex flex-col'>
-        <CodeDisplay getBackground={background} getLanguage={language} getTheme={theme} headerBackground={headerBackground} fileType={fileType} fileName={fileName} code={code} updateCode={setCode} />
+        <CodeDisplay getBackground={background} getLanguage={language} getTheme={theme} headerBackground={headerBackground} fileType={fileType} fileName={fileName} code={code} updateCode={setCode} ExportImage={ExportImg} resetExportImage={resetExportImage} />
       </div>
       <div className='flex flex-col'>
-        <Options updateBackground={updateBackground} updateLanguage={updateLanguage} updateTheme={updateTheme} updateFileName={updateFileName} />
+        <Options updateBackground={updateBackground} updateLanguage={updateLanguage} updateTheme={updateTheme} updateFileName={updateFileName} updateExportImg={updateExportImg} />
       </div>
     </>
   )

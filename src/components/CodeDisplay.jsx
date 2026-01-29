@@ -1,10 +1,12 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Editor from '@monaco-editor/react';
+import { toPng } from 'html-to-image';
 
-const CodeDisplay = ({ getBackground, getLanguage, getTheme, headerBackground, fileType, fileName, code, updateCode }) => {
+const CodeDisplay = ({ getBackground, getLanguage, getTheme, headerBackground, fileType, fileName, code, updateCode, ExportImage, resetExportImage }) => {
 
     console.log({ getBackground, getLanguage, getTheme, headerBackground, fileType })
     const editorRef = useRef(null);
+    const ImageRef = useRef(null);
     const [editorHeight, setEditorHeight] = useState('300px');
     const [showVerticalScrollbar, setShowVerticalScrollbar] = useState('hidden');
     const [showHorizontalScrollbar, setShowHorizontalScrollbar] = useState('hidden');
@@ -62,11 +64,33 @@ const CodeDisplay = ({ getBackground, getLanguage, getTheme, headerBackground, f
         editor.onDidContentSizeChange(updateEditorWidth);
     }
 
-    // Removed useEffect that set code based on language - now handled by App.jsx
+
+    const downloadImage = async () => {
+        if (ExportImage && ImageRef.current){
+            toPng(ImageRef.current, { cacheBust: true })
+                .then((imageUrl) => {
+                    const link = document.createElement('a');
+                    link.download = `${fileName}.png`;
+                    link.href = imageUrl;
+                    link.click();
+
+                    // Call the reset of the ExportImage state
+                })
+                .catch((error) => {
+                    console.error('Export failed', error);
+                    // Add alert div here (later on)?
+                })
+        resetExportImage();
+        }
+    }
+
+    useEffect(() => {
+        downloadImage();
+        }, [ExportImage, resetExportImage]);
 
     return (
-        <div className={`flex items-center justify-center w-[737.99px] h-[450px] m-10 mx-10 mt-20 mb-5`} style={{ background: getBackground }}>
-            <div style={{ width: editorWidth, background: '#1e1e1e', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 4px 12px rgba(0,0,0,0.3)' }}>
+        <div ref={ImageRef} className={`flex items-center justify-center w-[737.99px] h-[450px] m-10 mx-10 mt-20 mb-5`} style={{ background: getBackground }}>
+            <div ref={ImageRef} style={{ width: editorWidth, background: '#1e1e1e', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 4px 12px rgba(0,0,0,0.3)' }}>
                 {/* macOS Window Header */}
                 <div style={{
                     background: headerBackground, // background of the theme

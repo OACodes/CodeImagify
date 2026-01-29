@@ -7,7 +7,7 @@ import FileName from "./FileName";
 import ExportImage from "./ExportImage";
 import Save from "./Save";
 
-const Options = ({ updateBackground, updateLanguage, updateTheme, updateFileName }) => {
+const Options = ({ updateBackground, updateLanguage, updateTheme, updateFileName, updateExportImg }) => {
     // Jan 10 Todo:
     //  Create BackgroundType Dropdown
     //  use
@@ -27,15 +27,17 @@ const Options = ({ updateBackground, updateLanguage, updateTheme, updateFileName
                     <Theme updateTheme={updateTheme} />
                 </div>
             </div>
-            <div className={'flex flex-row w-[97%] items-center h-[100px] bg-[#fcfcfd] border border-[e3e3e3] rounded-sm mt-0 bg-transparent border-none'}>
-                <div className={'flex flex-row justify-evenly items-center w-[90%] h-[10%] mr-0 ml-0'}>
+            <div className="flex flex-row w-[100%]">
+                <div className={'flex flex-row w-[97%] items-center justify-center h-[100px] bg-[#fcfcfd] border border-[e3e3e3] rounded-sm mt-0 mr-0 bg-transparent border-none'}>
+                    <div className={'flex flex-row items-center w-[85%] h-[10%] gap-2 mr-0 ml-0'}>
 
-                    {/* Filename Input component */}
-                    <FileName updateFileName={updateFileName} />
-                    {/* Export Image button */}
-                    <ExportImage />
-                    {/* Save Button (only works when logged in ) */}
-                    <Save />
+                        {/* Filename Input component */}
+                        <FileName updateFileName={updateFileName} />
+                        {/* Export Image button */}
+                        <ExportImage updateExportImg={updateExportImg}/>
+                        {/* Save Button (only works when logged in ) */}
+                        <Save />
+                    </div>
                 </div>
             </div>
         </>
