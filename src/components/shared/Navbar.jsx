@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react'
-import codeimagifyLogo from '../assets/codeimagify-logo.png' // Ensure this path is correct based on your project structure
+import codeimagifyLogo from '../../assets/codeimagify-logo.png' // Ensure this path is correct based on your project structure
 
 const Navbar = () => {
     const [menuOpen, setMenuOpen] = useState(false)

@@ -67,20 +67,30 @@ const CodeDisplay = ({ getBackground, getLanguage, getTheme, headerBackground, f
 
     const downloadImage = async () => {
         if (ExportImage && ImageRef.current){
-            toPng(ImageRef.current, { cacheBust: true })
-                .then((imageUrl) => {
-                    const link = document.createElement('a');
-                    link.download = `${fileName}.png`;
-                    link.href = imageUrl;
-                    link.click();
-
-                    // Call the reset of the ExportImage state
-                })
-                .catch((error) => {
-                    console.error('Export failed', error);
-                    // Add alert div here (later on)?
-                })
-        resetExportImage();
+            try {
+                // toPng options with CORS-safe settings
+                const imageUrl = await toPng(ImageRef.current, {
+                    cacheBust: true,
+                    allowTaint: true,  // Allow tainting from cross-origin resources
+                    useCORS: true,     // Attempt to use CORS when available
+                    backgroundColor: 'white'  // Ensure background color
+                });
+                
+                const link = document.createElement('a');
+                link.download = `${fileName}.png`;
+                link.href = imageUrl;
+                link.click();
+                link.remove();
+                
+                console.log('Image exported successfully');
+            } catch (error) {
+                console.error('Export failed:', error);
+                // Fallback: Notify user of export failure
+                alert('Export failed. Please try again or check browser console for details.');
+            } finally {
+                // finally ensure it most run this no matter what
+                resetExportImage();
+            }
         }
     }
 

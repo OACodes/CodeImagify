@@ -1,22 +1,12 @@
-import Background from "./Background";
-import Language from "./Language";
-import Theme from "./Theme";
-import BackgroundType from "./BackgroundType";
-import { useState } from "react";
-import FileName from "./FileName";
-import ExportImage from "./ExportImage";
-import Save from "./Save";
+import Background from "../features/appearance/components/Background";
+import Language from "../features/language/components/Language";
+import Theme from "../features/appearance/components/Theme";
+import BackgroundType from "../features/appearance/components/BackgroundType";
+import FileName from "../features/language/components/FileName";
+import ExportImage from "../features/export/components/ExportImage";
+import Save from "../features/save/components/Save";
 
-const Options = ({ updateBackground, updateLanguage, updateTheme, updateFileName, updateExportImg }) => {
-    // Jan 10 Todo:
-    //  Create BackgroundType Dropdown
-    //  use
-    const [backgroundType, setBackgroundType] = useState('Solid');
-
-    const updateBackgroundType = (value) => {
-        setBackgroundType(prev => value ?? prev);
-    }
-
+const Options = ({ updateBackground, updateLanguage, updateTheme, updateFileName, updateExportImg, updateBackgroundType, backgroundType }) => {
     return (
         <>
             <div className={'flex flex-row w-[97%] h-[100px] bg-[#fcfcfd] mt-4 border border-[#e3e3e3] rounded-sm'}>

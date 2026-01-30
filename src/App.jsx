@@ -1,101 +1,39 @@
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 import './App.css'
-import Navbar from './components/Navbar'
-import CodeDisplay from './components/CodeDisplay'
+import Navbar from './components/shared/Navbar'
+import CodeDisplay from './features/editor/components/CodeDisplay'
 import Options from './components/Options'
-import Title from './components/Title'
-import Loader from './components/Loader'
+import Title from './features/language/components/Title'
+import Loader from './features/common/Loader'
+import { useSnippets } from './hooks/useSnippets'
+import { useEditor } from './hooks/useEditor'
+import { useLanguage } from './hooks/useLanguage'
+import { useBackground } from './hooks/useBackground'
+import { useTheme } from './hooks/useTheme'
 
 function App() {
-  const [background, setBackground] = useState('#2196F3');
-  const [language, setLanguage] = useState('javascript');
-  const [code, setCode] = useState('');
-  const [theme, setTheme] = useState('vs-dark');
-  const [fileType, setFileType] = useState('.js');
-  const [fileName, setFileName] = useState('hello_world');
-  const [headerBackground, setHeaderBackground] = useState('#1e1e1e');
-  const [snippets, setSnippets] = useState({});
-  const [loading, setLoading] = useState(true);
-  const [ExportImg, setExportImg] = useState(false);
-  const [fileExtensionsDetailed] = useState({
-    javascript: ['.js', '.jsx', '.mjs', '.cjs'],
-    typescript: ['.ts', '.tsx'],
-    html: ['.html', '.htm'],
-    css: ['.css', '.scss', '.sass', '.less'],
-    java: ['.java'],
-    cpp: ['.cpp', '.cc', '.cxx', '.hpp', '.h'],
-    csharp: ['.cs'],
-    ruby: ['.rb'],
-    python: ['.py', '.pyw'],
-    go: ['.go'],
-    php: ['.php'],
-    rust: ['.rs'],
-    sql: ['.sql'],
-    json: ['.json', '.jsonc'],
-    markdown: ['.md', '.markdown'],
-    bash: ['.sh', '.bash'],
-    yaml: ['.yaml', '.yml'],
-  });
+  const { snippets, loading } = useSnippets();
+  const { code, setCode, fileName, updateFileName, updateCode, ExportImg, updateExportImg, resetExportImage } = useEditor();
+  const { language, fileType, updateLanguage } = useLanguage(snippets);
+  const { background, updateBackground, backgroundType, updateBackgroundType } = useBackground();
+  const { theme, headerBackground, updateTheme } = useTheme();
 
-  // Fetch snippets from JSON on component mount
+  // Set initial code when snippets load
   useEffect(() => {
-    const fetchSnippets = async () => {
-      try {
-        const response = await fetch('/src/data/languageSnippets.json');
-        const data = await response.json();
-        setSnippets(data);
-        // Set initial code to JavaScript snippet
-        if (data.javascript) {
-          setCode(data.javascript.snippet);
-        }
-        setLoading(false);
-      } catch (error) {
-        console.error('Error loading snippets:', error);
-        setLoading(false);
-      }
-    };
-
-    fetchSnippets();
-  }, []);
-
-  const updateFileName = (currentFileName) => {
-    setFileName(prev => currentFileName ?? prev);
-  }
-
-  const updateBackground = (newBackground) => {
-    setBackground(prev => newBackground ?? prev);
-  }
-
-  const updateLanguage = (newLanguage) => {
-    setLanguage(newLanguage);
-    setFileType(fileExtensionsDetailed[newLanguage][0]);
-    // Update code with the snippet for the selected language
-    if (snippets[newLanguage]) {
-      setCode(snippets[newLanguage].snippet);
+    if (snippets.javascript && !code) {
+      setCode(snippets.javascript.snippet);
     }
-  }
+  }, [snippets, code, setCode]);
 
-  const updateTheme = (newTheme) => {
-    setTheme(prev => newTheme ?? prev);
-    if (newTheme === 'vs-dark') {
-      setHeaderBackground('#1e1e1e');
+  // Update code when language changes
+  useEffect(() => {
+    if (snippets[language]) {
+      setCode(snippets[language].snippet);
     }
-    else if (newTheme === 'vs') {
-      setHeaderBackground('#FFFFFF');
-    }
-    else {
-      setHeaderBackground(prev);
-    }
-  }
-
-  const updateExportImg = (newExportImg) => {
-    setExportImg(prev => newExportImg ?? prev);
-  }
-
-  const resetExportImage = () => {setExportImg(false)};
+  }, [language, snippets, setCode]);
 
   if (loading) {
-    return <Loader/>;
+    return <Loader />;
   }
 
   return (
@@ -105,10 +43,29 @@ function App() {
         <Title />
       </div>
       <div className='flex flex-col'>
-        <CodeDisplay getBackground={background} getLanguage={language} getTheme={theme} headerBackground={headerBackground} fileType={fileType} fileName={fileName} code={code} updateCode={setCode} ExportImage={ExportImg} resetExportImage={resetExportImage} />
+        <CodeDisplay
+          getBackground={background}
+          getLanguage={language}
+          getTheme={theme}
+          headerBackground={headerBackground}
+          fileType={fileType}
+          fileName={fileName}
+          code={code}
+          updateCode={updateCode}
+          ExportImage={ExportImg}
+          resetExportImage={resetExportImage}
+        />
       </div>
       <div className='flex flex-col'>
-        <Options updateBackground={updateBackground} updateLanguage={updateLanguage} updateTheme={updateTheme} updateFileName={updateFileName} updateExportImg={updateExportImg} />
+        <Options
+          updateBackground={updateBackground}
+          updateLanguage={updateLanguage}
+          updateTheme={updateTheme}
+          updateFileName={updateFileName}
+          updateExportImg={updateExportImg}
+          updateBackgroundType={updateBackgroundType}
+          backgroundType={backgroundType}
+        />
       </div>
     </>
   )
